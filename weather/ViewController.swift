@@ -20,7 +20,7 @@ final class ViewController: UIViewController {
     
     private let weatherImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "cloud")
+        imageView.image = UIImage(named: "rain")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
