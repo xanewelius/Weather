@@ -13,6 +13,7 @@ final class NetworkManager {
     
     func jsonPars(lat: String, lon: String, compeletionHandler: @escaping (ResponseBody) -> Void) {
         let finalURL = "\(baseURL)lat=\(lat)&lon=\(lon)&appid=55cd0a2d06779ea8b8b447c008f01830#"
+        print(finalURL)
         guard let url = URL(string: finalURL) else { return }
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {

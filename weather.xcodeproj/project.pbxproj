@@ -16,6 +16,7 @@
 		40401BAF29A98EAF00008F9C /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40401B9D29A98EAF00008F9C /* Montserrat-Light.ttf */; };
 		40401BB329A98EAF00008F9C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40401BA129A98EAF00008F9C /* Montserrat-Bold.ttf */; };
 		40401BC029A99F7300008F9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40401BBF29A99F7300008F9C /* Assets.xcassets */; };
+		40401BC429AA4C3100008F9C /* IconModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40401BC329AA4C3100008F9C /* IconModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		40401B9D29A98EAF00008F9C /* Montserrat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Light.ttf"; sourceTree = "<group>"; };
 		40401BA129A98EAF00008F9C /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		40401BBF29A99F7300008F9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		40401BC329AA4C3100008F9C /* IconModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +48,7 @@
 		40401B6E29A8FA8E00008F9C = {
 			isa = PBXGroup;
 			children = (
+				40401BC329AA4C3100008F9C /* IconModel.swift */,
 				40401B7929A8FA8E00008F9C /* weather */,
 				40401B7829A8FA8E00008F9C /* Products */,
 			);
@@ -158,6 +161,7 @@
 			files = (
 				40401B7F29A8FA8E00008F9C /* ViewController.swift in Sources */,
 				40401B7B29A8FA8E00008F9C /* AppDelegate.swift in Sources */,
+				40401BC429AA4C3100008F9C /* IconModel.swift in Sources */,
 				40401B9129A9754400008F9C /* NetworkManager.swift in Sources */,
 				40401B7D29A8FA8E00008F9C /* SceneDelegate.swift in Sources */,
 				40401B8F29A92B8900008F9C /* Model.swift in Sources */,
@@ -291,6 +295,10 @@
 				DEVELOPMENT_TEAM = 86GJ67H28Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weather/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow you location for the better result";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -318,6 +326,10 @@
 				DEVELOPMENT_TEAM = 86GJ67H28Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weather/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow you location for the better result";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

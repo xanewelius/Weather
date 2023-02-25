@@ -6,21 +6,26 @@
 //
 
 import UIKit
+import CoreLocation
 
-final class ViewController: UIViewController {
+final class ViewController: UIViewController, CLLocationManagerDelegate {
     
     private let networkManager = NetworkManager()
+    private var locationManager: CLLocationManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setBackgroundImage()
-        fetchData()
+        setupLocation()
         setupUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.layer.contents = UIImage(named: "background")?.cgImage
     }
     
     private let weatherImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "rain")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -55,24 +60,21 @@ final class ViewController: UIViewController {
 }
 
 private extension ViewController {
-    
-    func fetchData() {
-        networkManager.jsonPars(lat: "44,95300", lon: "34,06413") { weatherData in
+    func fetchData(lat: String, lon: String) {
+        networkManager.jsonPars(lat: lat, lon: lon) { weatherData in
             DispatchQueue.main.async {
                 guard let weather = weatherData.list.first,
-                      let desc = weather.weather.first?.description else { return }
+                      let desc = weather.weather.first?.description,
+                      let icon = weather.weather.first?.icon,
+                      let id = weather.weather.first?.id else { return }
                 
+                let iconModel = IconModel()
+                self.weatherImage.image = iconModel.fetchImage(icon: icon, id: Int(id))
                 self.labelTemp.text = "\(String(format: "%.2f", weather.main.temp - 273.15))°C"
                 self.labelDescriprion.text = "\(desc)"
                 self.labelCity.text = (weatherData.city.name)
             }
         }
-    }
-    func setBackgroundImage() {
-        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = UIImage(named: "background")
-        backgroundImage.contentMode = .scaleAspectFill
-        view.insertSubview (backgroundImage, at: 0)
     }
     
     func setupUI() {
@@ -83,16 +85,15 @@ private extension ViewController {
         view.addSubview(labelCity)
         
         NSLayoutConstraint.activate([
-            weatherImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 150),
-            weatherImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            labelTemp.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            labelTemp.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: 20),
+            labelDescriprion.bottomAnchor.constraint(equalTo: labelTemp.topAnchor, constant: -20),
             labelDescriprion.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             labelDescriprion.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            labelTemp.topAnchor.constraint(equalTo: labelDescriprion.bottomAnchor, constant: 25),
-            labelTemp.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            labelTemp.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            weatherImage.bottomAnchor.constraint(equalTo: labelDescriprion.topAnchor, constant: -10),
+            weatherImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             labelCity.topAnchor.constraint(equalTo: labelTemp.bottomAnchor, constant: 20),
             labelCity.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -101,3 +102,19 @@ private extension ViewController {
     }
 }
 
+extension ViewController {
+    private func setupLocation() {
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager?.requestAlwaysAuthorization()
+        locationManager?.startUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let first = locations.first else { return }
+        let lat = String(first.coordinate.latitude)
+        let lon = String(first.coordinate.longitude)
+        fetchData(lat: lat, lon: lon)
+    }
+}
