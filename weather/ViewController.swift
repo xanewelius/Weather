@@ -12,6 +12,7 @@ final class ViewController: UIViewController, CLLocationManagerDelegate {
     
     private let networkManager = NetworkManager()
     private var locationManager: CLLocationManager?
+    private var currentTemp = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +58,14 @@ final class ViewController: UIViewController, CLLocationManagerDelegate {
         label.font = UIFont(name: "Montserrat-Medium", size: 20)
         return label
     }()
+    
+    private let tempSwitch: UISwitch = {
+        let tempSwitch = UISwitch()
+        tempSwitch.onTintColor = .black
+        tempSwitch.translatesAutoresizingMaskIntoConstraints = false
+        tempSwitch.addTarget(self, action: #selector(switchDidTap), for: .valueChanged)
+        return tempSwitch
+    }()
 }
 
 private extension ViewController {
@@ -69,11 +78,22 @@ private extension ViewController {
                       let id = weather.weather.first?.id else { return }
                 
                 let iconModel = IconModel()
+                self.currentTemp = weather.main.temp - 273.15
+                print(self.currentTemp)
                 self.weatherImage.image = iconModel.fetchImage(icon: icon, id: Int(id))
                 self.labelTemp.text = "\(String(format: "%.2f", weather.main.temp - 273.15))°C"
                 self.labelDescriprion.text = "\(desc)"
                 self.labelCity.text = (weatherData.city.name)
             }
+        }
+    }
+    
+    @objc
+    func switchDidTap() {
+        if tempSwitch.isOn {
+            labelTemp.text = "\(String(format: "%.2f", currentTemp * 1.8 + 32))°F"
+        } else {
+            labelTemp.text = "\(String(format: "%.2f", currentTemp))°C"
         }
     }
     
@@ -83,6 +103,7 @@ private extension ViewController {
         view.addSubview(labelDescriprion)
         view.addSubview(labelTemp)
         view.addSubview(labelCity)
+        view.addSubview(tempSwitch)
         
         NSLayoutConstraint.activate([
             labelTemp.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -98,6 +119,9 @@ private extension ViewController {
             labelCity.topAnchor.constraint(equalTo: labelTemp.bottomAnchor, constant: 20),
             labelCity.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             labelCity.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            tempSwitch.topAnchor.constraint(equalTo: labelCity.bottomAnchor, constant: 25),
+            tempSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
     }
 }

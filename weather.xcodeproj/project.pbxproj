@@ -48,7 +48,6 @@
 		40401B6E29A8FA8E00008F9C = {
 			isa = PBXGroup;
 			children = (
-				40401BC329AA4C3100008F9C /* IconModel.swift */,
 				40401B7929A8FA8E00008F9C /* weather */,
 				40401B7829A8FA8E00008F9C /* Products */,
 			);
@@ -65,6 +64,7 @@
 		40401B7929A8FA8E00008F9C /* weather */ = {
 			isa = PBXGroup;
 			children = (
+				40401BC329AA4C3100008F9C /* IconModel.swift */,
 				40401B7A29A8FA8E00008F9C /* AppDelegate.swift */,
 				40401B7C29A8FA8E00008F9C /* SceneDelegate.swift */,
 				40401B7E29A8FA8E00008F9C /* ViewController.swift */,
