@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-final class ViewController: UIViewController, CLLocationManagerDelegate {
+final class ViewController: UIViewController {
     
     private let networkManager = NetworkManager()
     private var locationManager: CLLocationManager?
@@ -59,7 +59,7 @@ final class ViewController: UIViewController, CLLocationManagerDelegate {
         return label
     }()
     
-    private let tempSwitch: UISwitch = {
+    private lazy var tempSwitch: UISwitch = {
         let tempSwitch = UISwitch()
         tempSwitch.onTintColor = .black
         tempSwitch.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +79,6 @@ private extension ViewController {
                 
                 let iconModel = IconModel()
                 self.currentTemp = weather.main.temp - 273.15
-                print(self.currentTemp)
                 self.weatherImage.image = iconModel.fetchImage(icon: icon, id: Int(id))
                 self.labelTemp.text = "\(String(format: "%.2f", weather.main.temp - 273.15))°C"
                 self.labelDescriprion.text = "\(desc)"
@@ -126,7 +125,8 @@ private extension ViewController {
     }
 }
 
-extension ViewController {
+// MARK: - CLLocation
+extension ViewController: CLLocationManagerDelegate {
     private func setupLocation() {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
@@ -140,5 +140,12 @@ extension ViewController {
         let lat = String(first.coordinate.latitude)
         let lon = String(first.coordinate.longitude)
         fetchData(lat: lat, lon: lon)
+    }
+}
+
+// MARK: - User Defaults
+private extension ViewController {
+    func userDefaultsConfig() {
+        
     }
 }
