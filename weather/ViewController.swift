@@ -13,11 +13,13 @@ final class ViewController: UIViewController {
     private let networkManager = NetworkManager()
     private var locationManager: CLLocationManager?
     private var currentTemp = 0.0
+    private let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocation()
         setupUI()
+        checkForSwitcPreference()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,8 +93,10 @@ private extension ViewController {
     func switchDidTap() {
         if tempSwitch.isOn {
             labelTemp.text = "\(String(format: "%.2f", currentTemp * 1.8 + 32))°F"
+            userDefaultsConfig()
         } else {
             labelTemp.text = "\(String(format: "%.2f", currentTemp))°C"
+            userDefaultsConfig()
         }
     }
     
@@ -146,6 +150,19 @@ extension ViewController: CLLocationManagerDelegate {
 // MARK: - User Defaults
 private extension ViewController {
     func userDefaultsConfig() {
-        
+        if tempSwitch.isOn {
+            defaults.set(true, forKey: "switchModeOn")
+        } else {
+            defaults.set(false, forKey: "switchModeOff")
+        }
+    }
+    
+    func checkForSwitcPreference() {
+        print(defaults)
+        if defaults.bool(forKey: "switchModeOn") {
+            tempSwitch.setOn(true, animated: false)
+        } else {
+            tempSwitch.setOn(false, animated: false)
+        }
     }
 }
