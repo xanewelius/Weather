@@ -12,14 +12,15 @@ final class ViewController: UIViewController {
     
     private let networkManager = NetworkManager()
     private var locationManager: CLLocationManager?
+    private let defaults = UserDefaults.standard
+    
     private var currentTempCelsius = 0.0
     private var currentTempFahrenheit = 0.0
-    private let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocation()
-        setupUI()
+        layout()
         checkForSwitchPreference()
     }
     
@@ -100,7 +101,7 @@ private extension ViewController {
         userDefaultsConfig()
     }
     
-    func setupUI() {
+    func layout() {
         view.backgroundColor = .white
         view.addSubview(weatherImage)
         view.addSubview(labelDescriprion)
