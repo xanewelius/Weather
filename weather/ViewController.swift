@@ -12,14 +12,15 @@ final class ViewController: UIViewController {
     
     private let networkManager = NetworkManager()
     private var locationManager: CLLocationManager?
-    private var currentTemp = 0.0
+    private var currentTempCelsius = 0.0
+    private var currentTempFahrenheit = 0.0
     private let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocation()
         setupUI()
-        checkForSwitcPreference()
+        checkForSwitchPreference()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,7 +54,6 @@ final class ViewController: UIViewController {
     
     private let labelCity: UILabel = {
         let label = UILabel()
-        label.text = ""
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -80,9 +80,10 @@ private extension ViewController {
                       let id = weather.weather.first?.id else { return }
                 
                 let iconModel = IconModel()
-                self.currentTemp = weather.main.temp - 273.15
+                self.currentTempCelsius  = weather.main.temp - 273.15
+                self.currentTempFahrenheit = self.currentTempCelsius * 1.8 + 32
+                self.switchDidTap()
                 self.weatherImage.image = iconModel.fetchImage(icon: icon, id: Int(id))
-                self.labelTemp.text = "\(String(format: "%.2f", weather.main.temp - 273.15))°C"
                 self.labelDescriprion.text = "\(desc)"
                 self.labelCity.text = (weatherData.city.name)
             }
@@ -92,12 +93,11 @@ private extension ViewController {
     @objc
     func switchDidTap() {
         if tempSwitch.isOn {
-            labelTemp.text = "\(String(format: "%.2f", currentTemp * 1.8 + 32))°F"
-            userDefaultsConfig()
+            labelTemp.text = "\(String(format: "%.2f", currentTempFahrenheit))°F"
         } else {
-            labelTemp.text = "\(String(format: "%.2f", currentTemp))°C"
-            userDefaultsConfig()
+            labelTemp.text = "\(String(format: "%.2f", currentTempCelsius))°C"
         }
+        userDefaultsConfig()
     }
     
     func setupUI() {
@@ -151,18 +151,17 @@ extension ViewController: CLLocationManagerDelegate {
 private extension ViewController {
     func userDefaultsConfig() {
         if tempSwitch.isOn {
-            defaults.set(true, forKey: "switchModeOn")
+            defaults.set(tempSwitch.isOn, forKey: "setSwitch")
         } else {
-            defaults.set(false, forKey: "switchModeOff")
+            defaults.set(tempSwitch.isOn, forKey: "setSwitch")
         }
     }
     
-    func checkForSwitcPreference() {
-        print(defaults)
-        if defaults.bool(forKey: "switchModeOn") {
-            tempSwitch.setOn(true, animated: false)
+    func checkForSwitchPreference() {
+        if defaults.object(forKey: "setSwitch") != nil {
+            tempSwitch.isOn = defaults.bool(forKey: "setSwitch")
         } else {
-            tempSwitch.setOn(false, animated: false)
+            tempSwitch.isOn = defaults.bool(forKey: "setSwitch")
         }
     }
 }
