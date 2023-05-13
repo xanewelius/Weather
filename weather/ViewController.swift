@@ -11,6 +11,7 @@ import CoreLocation
 final class ViewController: UIViewController {
     
     private let networkManager = NetworkManager()
+    private let iconModel = IconModel()
     private var locationManager: CLLocationManager?
     private let defaults = UserDefaults.standard
     
@@ -89,7 +90,7 @@ final class ViewController: UIViewController {
         return stackView
     }()
     
-    let blurView: UIVisualEffectView = {
+    let blurTempView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: .light)
         let view = UIVisualEffectView(effect: blurEffect)
         view.layer.cornerRadius = 20
@@ -99,13 +100,97 @@ final class ViewController: UIViewController {
         return view
     }()
     
-    private let sdgdStackView: UIStackView = {
+    private let elementsStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.spacing = 0
+        stackView.spacing = 10
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
+    }()
+    
+    private let pressureLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Montserrat-Medium", size: 20)
+        return label
+    }()
+    
+    private let pressureImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "pressure"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let pressureStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillProportionally
+        stackView.alignment = .center
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private let humidityLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Montserrat-Medium", size: 20)
+        return label
+    }()
+    
+    private let humidityImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "humidity"))
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let humidityStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillProportionally
+        stackView.alignment = .center
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private let windLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Montserrat-Medium", size: 20)
+        return label
+    }()
+    
+    private let windImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "wind"))
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let windStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillProportionally
+        stackView.alignment = .center
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    let blurElemetnsView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .light)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.layer.cornerRadius = 20
+        view.layer.opacity = 0.3
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 }
 
@@ -118,19 +203,22 @@ private extension ViewController {
                       let icon = weather.weather.first?.icon,
                       let id = weather.weather.first?.id else { return }
                 
-                let iconModel = IconModel()
-                
                 let date = Date(timeIntervalSince1970: TimeInterval(weather.dt))
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "EEEE, d MMM yyyy HH:mm"
+                dateFormatter.dateFormat = "EEEE, d MMM yyyy, на HH:mm"
                 dateFormatter.locale = Locale(identifier: "ru") //en_US
                 let dateString = dateFormatter.string(from: date)
+                
+                self.pressureLabel.text = String(format: "%.0f", weather.main.pressure / 1.333) + " mm"
+                self.humidityLabel.text = "\(weather.main.humidity)%"
+                self.windLabel.text = "\(weather.wind.speed) m/s"
                 
                 self.dateInfo.text = "\(dateString)"
                 self.currentTempCelsius  = weather.main.temp - 273.15
                 self.currentTempFahrenheit = self.currentTempCelsius * 1.8 + 32
                 self.switchDidTap()
-                self.weatherImage.image = iconModel.fetchImage(icon: icon, id: Int(id))
+                
+                self.weatherImage.image = self.iconModel.fetchImage(icon: icon, id: Int(id))
                 self.labelDescriprion.text = "\(desc)"
                 self.labelCity.text = (weatherData.city.name)
             }
@@ -152,37 +240,69 @@ private extension ViewController {
         view.addSubview(dateInfo)
         
         view.addSubview(tempStackView)
-        
-        
-        tempStackView.insertSubview(blurView, at: 0)
+        tempStackView.insertSubview(blurTempView, at: 0)
         tempStackView.addArrangedSubview(weatherImage)
         tempStackView.addArrangedSubview(labelDescriprion)
         tempStackView.addArrangedSubview(labelTemp)
+        
+        view.addSubview(elementsStackView)
+        elementsStackView.insertSubview(blurElemetnsView, at: 0)
+        
+        elementsStackView.addArrangedSubview(pressureStackView)
+        elementsStackView.addArrangedSubview(humidityStackView)
+        elementsStackView.addArrangedSubview(windStackView)
+        
+        pressureStackView.addArrangedSubview(pressureImageView)
+        pressureStackView.addArrangedSubview(pressureLabel)
+        
+        humidityStackView.addArrangedSubview(humidityImageView)
+        humidityStackView.addArrangedSubview(humidityLabel)
+        
+        windStackView.addArrangedSubview(windImageView)
+        windStackView.addArrangedSubview(windLabel)
+        
         //infoStackView.addArrangedSubview(tempSwitch)
         
-        
-        
         NSLayoutConstraint.activate([
-            blurView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
-            blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 35),
-            blurView.heightAnchor.constraint(equalToConstant: 150),
-            blurView.widthAnchor.constraint(equalToConstant: 140),
+            tempStackView.centerXAnchor.constraint(equalTo: blurTempView.centerXAnchor),
+            tempStackView.centerYAnchor.constraint(equalTo: blurTempView.centerYAnchor),
             
-            tempStackView.centerXAnchor.constraint(equalTo: blurView.centerXAnchor),
-            tempStackView.centerYAnchor.constraint(equalTo: blurView.centerYAnchor),
+            blurTempView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
+            blurTempView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            blurTempView.heightAnchor.constraint(equalToConstant: 150),
+            blurTempView.widthAnchor.constraint(equalToConstant: 140),
             
             weatherImage.heightAnchor.constraint(equalToConstant: 70),
             weatherImage.widthAnchor.constraint(equalToConstant: 70),
             
             labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: -10),
-            labelDescriprion.widthAnchor.constraint(equalTo: blurView.widthAnchor, constant: -20), // Ограничить ширину labelDescription
+            labelDescriprion.widthAnchor.constraint(equalTo: blurTempView.widthAnchor, constant: -20), // Ограничить ширину labelDescription
             
             labelCity.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             labelCity.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             dateInfo.topAnchor.constraint(equalTo: labelCity.bottomAnchor, constant: 10),
             dateInfo.widthAnchor.constraint(equalToConstant: 150),
-            dateInfo.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            dateInfo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            
+            elementsStackView.centerXAnchor.constraint(equalTo: blurElemetnsView.centerXAnchor),
+            elementsStackView.centerYAnchor.constraint(equalTo: blurElemetnsView.centerYAnchor),
+            pressureStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -30),
+            humidityStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -30),
+            windStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -30),
+            
+            pressureImageView.heightAnchor.constraint(equalToConstant: 30),
+            pressureImageView.widthAnchor.constraint(equalToConstant: 30),
+            humidityImageView.heightAnchor.constraint(equalToConstant: 30),
+            humidityImageView.widthAnchor.constraint(equalToConstant: 30),
+            windImageView.heightAnchor.constraint(equalToConstant: 30),
+            windImageView.widthAnchor.constraint(equalToConstant: 30),
+            
+            blurElemetnsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
+            blurElemetnsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            blurElemetnsView.heightAnchor.constraint(equalToConstant: 150),
+            blurElemetnsView.widthAnchor.constraint(equalToConstant: 170),
         ])
     }
 }

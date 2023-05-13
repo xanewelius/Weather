@@ -16,6 +16,7 @@ struct ResponseBody: Codable {
         var dt: Double
         var weather: [WeatherResponse]
         var main: MainResponse
+        var wind: Wind
     }
 
     struct WeatherResponse: Codable {
@@ -32,6 +33,12 @@ struct ResponseBody: Codable {
         var temp_max: Double
         var pressure: Double
         var humidity: Double
+    }
+    
+    struct Wind: Codable {
+        var speed: Double
+        var deg: Double
+        var gust: Double
     }
     
     struct CityResponse: Codable {
