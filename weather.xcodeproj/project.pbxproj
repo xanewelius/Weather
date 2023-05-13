@@ -64,6 +64,7 @@
 		40401B7929A8FA8E00008F9C /* weather */ = {
 			isa = PBXGroup;
 			children = (
+				40401B9929A98EAF00008F9C /* fonts */,
 				40401BC329AA4C3100008F9C /* IconModel.swift */,
 				40401B7A29A8FA8E00008F9C /* AppDelegate.swift */,
 				40401B7C29A8FA8E00008F9C /* SceneDelegate.swift */,
@@ -72,7 +73,6 @@
 				40401B8829A8FA8F00008F9C /* Info.plist */,
 				40401B8E29A92B8900008F9C /* Model.swift */,
 				40401B9029A9754400008F9C /* NetworkManager.swift */,
-				40401B9929A98EAF00008F9C /* fonts */,
 			);
 			path = weather;
 			sourceTree = "<group>";
@@ -295,14 +295,16 @@
 				DEVELOPMENT_TEAM = 86GJ67H28Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weather/Info.plist;
+				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "We want to help you find your nearest store";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow you location for the better result";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow you location for the better result";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Allow you location for the better result";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We want to help you find your nearest store";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -310,9 +312,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xanew.weather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -326,14 +331,16 @@
 				DEVELOPMENT_TEAM = 86GJ67H28Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weather/Info.plist;
+				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "We want to help you find your nearest store";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow you location for the better result";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow you location for the better result";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Allow you location for the better result";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow you location for the better result";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We want to help you find your nearest store";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -341,9 +348,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xanew.weather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

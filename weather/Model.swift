@@ -13,6 +13,7 @@ struct ResponseBody: Codable {
     var city: CityResponse
     
     struct ListResponse: Codable {
+        var dt: Double
         var weather: [WeatherResponse]
         var main: MainResponse
     }
