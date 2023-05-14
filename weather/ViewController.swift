@@ -29,7 +29,12 @@ final class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        view.layer.contents = UIImage(named: "background1")?.cgImage
+        let blurEffect = UIBlurEffect(style: .systemThickMaterialDark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = view.bounds
+        blurView.layer.opacity = 0.7
+        view.insertSubview(blurView, at: 0)
+        view.layer.contents = UIImage(named: "back")?.cgImage
     }
     
     // MARK: - Main temp view
@@ -255,8 +260,7 @@ extension ViewController {
 //                    return false
 //                }
                 
-                self.todayForecast = Array(weatherData.list.prefix(6))
-
+                self.todayForecast = Array(weatherData.list.dropFirst().prefix(6))
                 
                 self.weatherForecast = filteredWeatherForecast
                 //self.todayForecast = filteredTodayForecast
@@ -366,17 +370,28 @@ private extension ViewController {
         weatherForecastCollectionView.delegate = self
         weatherForecastCollectionView.dataSource = self
         
-        //infoStackView.addArrangedSubview(tempSwitch)
+//        view.addSubview(tempSwitch)
         layout()
     }
     
     func layout() {
         NSLayoutConstraint.activate([
+            
+//            tempSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            tempSwitch.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            labelCity.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            labelCity.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            dateInfo.topAnchor.constraint(equalTo: labelCity.bottomAnchor, constant: 5),
+            dateInfo.widthAnchor.constraint(equalToConstant: 150),
+            dateInfo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             //main temp
             tempStackView.centerXAnchor.constraint(equalTo: blurTempView.centerXAnchor),
             tempStackView.centerYAnchor.constraint(equalTo: blurTempView.centerYAnchor),
             
-            blurTempView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
+            blurTempView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 110),
             blurTempView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             blurTempView.heightAnchor.constraint(equalToConstant: 150),
             blurTempView.widthAnchor.constraint(equalToConstant: 140),
@@ -384,15 +399,9 @@ private extension ViewController {
             weatherImage.heightAnchor.constraint(equalToConstant: 70),
             weatherImage.widthAnchor.constraint(equalToConstant: 70),
             
-            labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: 0),
+            labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: -10),
             labelDescriprion.widthAnchor.constraint(equalTo: blurTempView.widthAnchor, constant: -20),
-            
-            labelCity.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            labelCity.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            dateInfo.topAnchor.constraint(equalTo: labelCity.bottomAnchor, constant: 10),
-            dateInfo.widthAnchor.constraint(equalToConstant: 150),
-            dateInfo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            labelDescriprion.heightAnchor.constraint(equalToConstant: 40),
             
             //elements
             elementsStackView.centerXAnchor.constraint(equalTo: blurElemetnsView.centerXAnchor),
@@ -408,7 +417,7 @@ private extension ViewController {
             windImageView.heightAnchor.constraint(equalToConstant: 30),
             windImageView.widthAnchor.constraint(equalToConstant: 30),
             
-            blurElemetnsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
+            blurElemetnsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 110),
             blurElemetnsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             blurElemetnsView.heightAnchor.constraint(equalToConstant: 150),
             blurElemetnsView.widthAnchor.constraint(equalToConstant: 190),

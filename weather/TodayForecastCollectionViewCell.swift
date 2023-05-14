@@ -85,7 +85,7 @@ private extension TodayForecastCollectionViewCell {
             dateInfo.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 5),
             
             weatherImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0),
-            weatherImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -5),
+            weatherImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -2),
             weatherImage.heightAnchor.constraint(equalToConstant: 25),
             weatherImage.widthAnchor.constraint(equalToConstant: 25),
             
