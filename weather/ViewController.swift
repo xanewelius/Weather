@@ -218,8 +218,16 @@ extension ViewController {
                       let icon = weather.weather.first?.icon,
                       let id = weather.weather.first?.id else { return }
                 
+                let filteredWeatherForecast = weatherData.list.filter { weather in
+                    let date = Date(timeIntervalSince1970: TimeInterval(weather.dt))
+                    if Calendar.current.isDateInToday(date) {
+                        return false
+                    }
+                    let hour = Calendar.current.component(.hour, from: date)
+                    return hour == 12
+                }
                 
-                self.weatherForecast = weatherData.list
+                self.weatherForecast = filteredWeatherForecast
                 self.collectionView.reloadData()
                  
                 self.pressureLabel.text = String(format: "%.0f", weather.main.pressure / 1.333) + " mm"
@@ -238,7 +246,7 @@ extension ViewController {
     }
     
     func dateFormatter(date: ResponseBody.ListResponse, format: String) -> String {
-        let date = Date(timeIntervalSince1970: TimeInterval(date.dt - 1))
+        let date = Date(timeIntervalSince1970: TimeInterval(date.dt))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         dateFormatter.locale = Locale(identifier: "ru") //en_US
@@ -303,7 +311,7 @@ extension ViewController {
             weatherImage.heightAnchor.constraint(equalToConstant: 70),
             weatherImage.widthAnchor.constraint(equalToConstant: 70),
             
-            labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: -10),
+            labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: -5),
             labelDescriprion.widthAnchor.constraint(equalTo: blurTempView.widthAnchor, constant: -20), // Ограничить ширину labelDescription
             
             labelCity.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -385,7 +393,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? CollectionViewCell else { return UICollectionViewCell() }
-        
         
         let weather = weatherForecast[indexPath.item]
         cell.configure(with: weather)
