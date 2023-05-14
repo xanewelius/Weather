@@ -15,6 +15,7 @@ final class ViewController: UIViewController {
     private let defaults = UserDefaults.standard
     
     private var weatherForecast: [ResponseBody.ListResponse] = []
+    private var todayForecast: [ResponseBody.ListResponse] = []
     private var currentTempCelsius = 0.0
     private var currentTempFahrenheit = 0.0
     private let collectionInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
@@ -30,6 +31,8 @@ final class ViewController: UIViewController {
         super.viewWillAppear(animated)
         view.layer.contents = UIImage(named: "background1")?.cgImage
     }
+    
+    // MARK: - Main temp view
     
     private let weatherImage: UIImageView = {
         let imageView = UIImageView()
@@ -100,6 +103,8 @@ final class ViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    // MARK: - Meteorological elements view
     
     private let elementsStackView: UIStackView = {
         let stackView = UIStackView()
@@ -194,7 +199,25 @@ final class ViewController: UIViewController {
         return view
     }()
     
-    let collectionView: UICollectionView = {
+    // MARK: - Today weather Collection View
+    
+    let todayForecastCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 50, height: 80)
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isScrollEnabled = true
+        collectionView.backgroundColor = .clear
+        collectionView.contentInsetAdjustmentBehavior = .automatic
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(TodayForecastCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        return collectionView
+    }()
+    
+    // MARK: - Weather forecast Collection View
+    
+    let weatherForecastCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 100, height: 120)
@@ -204,7 +227,7 @@ final class ViewController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.contentInsetAdjustmentBehavior = .automatic
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView.register(WeatherForecastCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         return collectionView
     }()
 }
@@ -220,15 +243,25 @@ extension ViewController {
                 
                 let filteredWeatherForecast = weatherData.list.filter { weather in
                     let date = Date(timeIntervalSince1970: TimeInterval(weather.dt))
-                    if Calendar.current.isDateInToday(date) {
-                        return false
-                    }
                     let hour = Calendar.current.component(.hour, from: date)
                     return hour == 12
                 }
                 
+//                let filteredTodayForecast = weatherData.list.filter { weather in
+//                    let date = Date(timeIntervalSince1970: TimeInterval(weather.dt))
+//                    if Calendar.current.isDateInToday(date) {
+//                        return true
+//                    }
+//                    return false
+//                }
+                
+                self.todayForecast = Array(weatherData.list.prefix(6))
+
+                
                 self.weatherForecast = filteredWeatherForecast
-                self.collectionView.reloadData()
+                //self.todayForecast = filteredTodayForecast
+                self.weatherForecastCollectionView.reloadData()
+                self.todayForecastCollectionView.reloadData()
                  
                 self.pressureLabel.text = String(format: "%.0f", weather.main.pressure / 1.333) + " mm"
                 self.humidityLabel.text = "\(weather.main.humidity)%"
@@ -263,7 +296,46 @@ extension ViewController {
         }
         userDefaultsConfig()
     }
+}
+
+extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if collectionView == todayForecastCollectionView {
+            print(todayForecast.count)
+            return todayForecast.count
+        }
+        print(weatherForecast.count)
+        return weatherForecast.count
+    }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == todayForecastCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? TodayForecastCollectionViewCell else { return UICollectionViewCell() }
+
+            let weather = todayForecast[indexPath.item]
+            cell.configure(with: weather)
+
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? WeatherForecastCollectionViewCell else { return UICollectionViewCell() }
+
+            let weather = weatherForecast[indexPath.item]
+            cell.configure(with: weather)
+
+            return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        collectionInsets
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        collectionInsets.top
+    }
+}
+
+private extension ViewController {
     func configureView() {
         view.addSubview(labelCity)
         view.addSubview(dateInfo)
@@ -276,30 +348,31 @@ extension ViewController {
         
         view.addSubview(elementsStackView)
         elementsStackView.insertSubview(blurElemetnsView, at: 0)
-        
         elementsStackView.addArrangedSubview(pressureStackView)
-        elementsStackView.addArrangedSubview(humidityStackView)
-        elementsStackView.addArrangedSubview(windStackView)
-        
         pressureStackView.addArrangedSubview(pressureImageView)
         pressureStackView.addArrangedSubview(pressureLabel)
-        
+        elementsStackView.addArrangedSubview(humidityStackView)
         humidityStackView.addArrangedSubview(humidityImageView)
         humidityStackView.addArrangedSubview(humidityLabel)
-        
+        elementsStackView.addArrangedSubview(windStackView)
         windStackView.addArrangedSubview(windImageView)
         windStackView.addArrangedSubview(windLabel)
         
-        //infoStackView.addArrangedSubview(tempSwitch)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        view.addSubview(collectionView)
+        view.addSubview(todayForecastCollectionView)
+        todayForecastCollectionView.delegate = self
+        todayForecastCollectionView.dataSource = self
         
+        view.addSubview(weatherForecastCollectionView)
+        weatherForecastCollectionView.delegate = self
+        weatherForecastCollectionView.dataSource = self
+        
+        //infoStackView.addArrangedSubview(tempSwitch)
         layout()
     }
     
     func layout() {
         NSLayoutConstraint.activate([
+            //main temp
             tempStackView.centerXAnchor.constraint(equalTo: blurTempView.centerXAnchor),
             tempStackView.centerYAnchor.constraint(equalTo: blurTempView.centerYAnchor),
             
@@ -311,8 +384,8 @@ extension ViewController {
             weatherImage.heightAnchor.constraint(equalToConstant: 70),
             weatherImage.widthAnchor.constraint(equalToConstant: 70),
             
-            labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: -5),
-            labelDescriprion.widthAnchor.constraint(equalTo: blurTempView.widthAnchor, constant: -20), // Ограничить ширину labelDescription
+            labelDescriprion.topAnchor.constraint(equalTo: weatherImage.bottomAnchor, constant: 0),
+            labelDescriprion.widthAnchor.constraint(equalTo: blurTempView.widthAnchor, constant: -20),
             
             labelCity.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             labelCity.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -321,7 +394,7 @@ extension ViewController {
             dateInfo.widthAnchor.constraint(equalToConstant: 150),
             dateInfo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            
+            //elements
             elementsStackView.centerXAnchor.constraint(equalTo: blurElemetnsView.centerXAnchor),
             elementsStackView.centerYAnchor.constraint(equalTo: blurElemetnsView.centerYAnchor),
             pressureStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -40),
@@ -340,10 +413,17 @@ extension ViewController {
             blurElemetnsView.heightAnchor.constraint(equalToConstant: 150),
             blurElemetnsView.widthAnchor.constraint(equalToConstant: 190),
             
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 120)
+            // today collection view
+            todayForecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            todayForecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            todayForecastCollectionView.topAnchor.constraint(equalTo: blurElemetnsView.bottomAnchor, constant: 10),
+            todayForecastCollectionView.heightAnchor.constraint(equalToConstant: 120),
+            
+            // forecast collection view
+            weatherForecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            weatherForecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            weatherForecastCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            weatherForecastCollectionView.heightAnchor.constraint(equalToConstant: 120)
         ])
     }
 }
@@ -382,29 +462,5 @@ private extension ViewController {
         } else {
             tempSwitch.isOn = defaults.bool(forKey: "setSwitch")
         }
-    }
-}
-
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("count: ", weatherForecast.count)
-        return weatherForecast.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? CollectionViewCell else { return UICollectionViewCell() }
-        
-        let weather = weatherForecast[indexPath.item]
-        cell.configure(with: weather)
-        
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        collectionInsets
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        collectionInsets.top
     }
 }

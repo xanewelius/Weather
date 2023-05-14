@@ -1,18 +1,18 @@
 //
-//  CollectionViewCell.swift
+//  TodayForecastCollectionViewCell.swift
 //  weather
 //
-//  Created by Max Kuzmin on 13.05.2023.
+//  Created by Max Kuzmin on 14.05.2023.
 //
 
 import UIKit
 
-class CollectionViewCell: UICollectionViewCell {
+class TodayForecastCollectionViewCell: UICollectionViewCell {
     
     private let iconModel = IconModel()
     private let viewController = ViewController()
     
-    private let weatherImage: UIImageView = {
+    let weatherImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -20,7 +20,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     let tempLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Montserrat-Medium", size: 20)
+        label.font = UIFont(name: "Montserrat-Medium", size: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         return label
@@ -59,11 +59,11 @@ class CollectionViewCell: UICollectionViewCell {
     func configure(with list: ResponseBody.ListResponse) {
         tempLabel.text = "\(String(format: "%.0f", list.main.temp - 273.15))°C"
         weatherImage.image = self.iconModel.fetchImage(icon: list.weather.first!.icon, id: Int(list.weather.first!.id))
-        dateInfo.text = "\(viewController.dateFormatter(date: list, format: "EEEE"))"
+        dateInfo.text = "\(viewController.dateFormatter(date: list, format: "HH:mm"))"
     }
 }
 
-private extension CollectionViewCell {
+private extension TodayForecastCollectionViewCell {
     func configureView() {
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
@@ -78,16 +78,16 @@ private extension CollectionViewCell {
     
     func layout() {
         NSLayoutConstraint.activate([
-            
             blurView.heightAnchor.constraint(equalToConstant: 120),
             blurView.widthAnchor.constraint(equalToConstant: 100),
             
             dateInfo.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0),
+            dateInfo.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 5),
             
             weatherImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0),
-            weatherImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -10),
-            weatherImage.heightAnchor.constraint(equalToConstant: 50),
-            weatherImage.widthAnchor.constraint(equalToConstant: 50),
+            weatherImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -5),
+            weatherImage.heightAnchor.constraint(equalToConstant: 25),
+            weatherImage.widthAnchor.constraint(equalToConstant: 25),
             
             tempLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0),
             tempLabel.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -5)

@@ -17,7 +17,8 @@
 		40401BB329A98EAF00008F9C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40401BA129A98EAF00008F9C /* Montserrat-Bold.ttf */; };
 		40401BC029A99F7300008F9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40401BBF29A99F7300008F9C /* Assets.xcassets */; };
 		40401BC429AA4C3100008F9C /* IconModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40401BC329AA4C3100008F9C /* IconModel.swift */; };
-		4049D6BD2A1013510079F0A3 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4049D6BC2A1013510079F0A3 /* CollectionViewCell.swift */; };
+		4049D6BD2A1013510079F0A3 /* WeatherForecastCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4049D6BC2A1013510079F0A3 /* WeatherForecastCollectionViewCell.swift */; };
+		4049D6BF2A10F51A0079F0A3 /* TodayForecastCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4049D6BE2A10F51A0079F0A3 /* TodayForecastCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +34,8 @@
 		40401BA129A98EAF00008F9C /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		40401BBF29A99F7300008F9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		40401BC329AA4C3100008F9C /* IconModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconModel.swift; sourceTree = "<group>"; };
-		4049D6BC2A1013510079F0A3 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		4049D6BC2A1013510079F0A3 /* WeatherForecastCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastCollectionViewCell.swift; sourceTree = "<group>"; };
+		4049D6BE2A10F51A0079F0A3 /* TodayForecastCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayForecastCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +73,8 @@
 				40401B7A29A8FA8E00008F9C /* AppDelegate.swift */,
 				40401B7C29A8FA8E00008F9C /* SceneDelegate.swift */,
 				40401B7E29A8FA8E00008F9C /* ViewController.swift */,
-				4049D6BC2A1013510079F0A3 /* CollectionViewCell.swift */,
+				4049D6BE2A10F51A0079F0A3 /* TodayForecastCollectionViewCell.swift */,
+				4049D6BC2A1013510079F0A3 /* WeatherForecastCollectionViewCell.swift */,
 				40401BBF29A99F7300008F9C /* Assets.xcassets */,
 				40401B8829A8FA8F00008F9C /* Info.plist */,
 				40401B8E29A92B8900008F9C /* Model.swift */,
@@ -165,10 +168,11 @@
 				40401B7F29A8FA8E00008F9C /* ViewController.swift in Sources */,
 				40401B7B29A8FA8E00008F9C /* AppDelegate.swift in Sources */,
 				40401BC429AA4C3100008F9C /* IconModel.swift in Sources */,
-				4049D6BD2A1013510079F0A3 /* CollectionViewCell.swift in Sources */,
+				4049D6BD2A1013510079F0A3 /* WeatherForecastCollectionViewCell.swift in Sources */,
 				40401B9129A9754400008F9C /* NetworkManager.swift in Sources */,
 				40401B7D29A8FA8E00008F9C /* SceneDelegate.swift in Sources */,
 				40401B8F29A92B8900008F9C /* Model.swift in Sources */,
+				4049D6BF2A10F51A0079F0A3 /* TodayForecastCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
