@@ -8,7 +8,7 @@
 import Foundation
 
 struct ResponseBody: Codable {
-   
+    
     var list: [ListResponse]
     var city: CityResponse
     
@@ -17,6 +17,7 @@ struct ResponseBody: Codable {
         var weather: [WeatherResponse]
         var main: MainResponse
         var wind: Wind
+        var dt_txt: String
     }
 
     struct WeatherResponse: Codable {
@@ -32,7 +33,7 @@ struct ResponseBody: Codable {
         var temp_min: Double
         var temp_max: Double
         var pressure: Double
-        var humidity: Double
+        var humidity: Int
     }
     
     struct Wind: Codable {

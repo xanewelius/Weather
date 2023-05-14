@@ -10,18 +10,19 @@ import CoreLocation
 
 final class ViewController: UIViewController {
     
-    private let networkManager = NetworkManager()
     private let iconModel = IconModel()
     private var locationManager: CLLocationManager?
     private let defaults = UserDefaults.standard
     
+    private var weatherForecast: [ResponseBody.ListResponse] = []
     private var currentTempCelsius = 0.0
     private var currentTempFahrenheit = 0.0
+    private let collectionInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocation()
-        layout()
+        configureView()
         checkForSwitchPreference()
     }
     
@@ -192,37 +193,57 @@ final class ViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 100, height: 120)
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isScrollEnabled = true
+        collectionView.backgroundColor = .clear
+        collectionView.contentInsetAdjustmentBehavior = .automatic
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        return collectionView
+    }()
 }
 
-private extension ViewController {
+extension ViewController {
     func fetchData(lat: String, lon: String) {
-        networkManager.jsonPars(lat: lat, lon: lon) { weatherData in
+        NetworkManager.shared.jsonPars(lat: lat, lon: lon) { weatherData in
             DispatchQueue.main.async {
                 guard let weather = weatherData.list.first,
                       let desc = weather.weather.first?.description,
                       let icon = weather.weather.first?.icon,
                       let id = weather.weather.first?.id else { return }
                 
-                let date = Date(timeIntervalSince1970: TimeInterval(weather.dt))
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "EEEE, d MMM yyyy, на HH:mm"
-                dateFormatter.locale = Locale(identifier: "ru") //en_US
-                let dateString = dateFormatter.string(from: date)
                 
+                self.weatherForecast = weatherData.list
+                self.collectionView.reloadData()
+                 
                 self.pressureLabel.text = String(format: "%.0f", weather.main.pressure / 1.333) + " mm"
                 self.humidityLabel.text = "\(weather.main.humidity)%"
                 self.windLabel.text = "\(weather.wind.speed) m/s"
                 
-                self.dateInfo.text = "\(dateString)"
+                self.dateInfo.text = "\(self.dateFormatter(date: weather, format: "EEEE, d MMM yyyy, на HH:mm"))"
                 self.currentTempCelsius  = weather.main.temp - 273.15
                 self.currentTempFahrenheit = self.currentTempCelsius * 1.8 + 32
                 self.switchDidTap()
-                
                 self.weatherImage.image = self.iconModel.fetchImage(icon: icon, id: Int(id))
                 self.labelDescriprion.text = "\(desc)"
                 self.labelCity.text = (weatherData.city.name)
             }
         }
+    }
+    
+    func dateFormatter(date: ResponseBody.ListResponse, format: String) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(date.dt - 1))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        dateFormatter.locale = Locale(identifier: "ru") //en_US
+        let dateString = dateFormatter.string(from: date)
+        return dateString
     }
     
     @objc
@@ -235,7 +256,7 @@ private extension ViewController {
         userDefaultsConfig()
     }
     
-    func layout() {
+    func configureView() {
         view.addSubview(labelCity)
         view.addSubview(dateInfo)
         
@@ -262,7 +283,14 @@ private extension ViewController {
         windStackView.addArrangedSubview(windLabel)
         
         //infoStackView.addArrangedSubview(tempSwitch)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        view.addSubview(collectionView)
         
+        layout()
+    }
+    
+    func layout() {
         NSLayoutConstraint.activate([
             tempStackView.centerXAnchor.constraint(equalTo: blurTempView.centerXAnchor),
             tempStackView.centerYAnchor.constraint(equalTo: blurTempView.centerYAnchor),
@@ -288,9 +316,9 @@ private extension ViewController {
             
             elementsStackView.centerXAnchor.constraint(equalTo: blurElemetnsView.centerXAnchor),
             elementsStackView.centerYAnchor.constraint(equalTo: blurElemetnsView.centerYAnchor),
-            pressureStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -30),
-            humidityStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -30),
-            windStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -30),
+            pressureStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -40),
+            humidityStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -40),
+            windStackView.widthAnchor.constraint(equalTo: blurElemetnsView.widthAnchor, constant: -40  ),
             
             pressureImageView.heightAnchor.constraint(equalToConstant: 30),
             pressureImageView.widthAnchor.constraint(equalToConstant: 30),
@@ -302,7 +330,12 @@ private extension ViewController {
             blurElemetnsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             blurElemetnsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             blurElemetnsView.heightAnchor.constraint(equalToConstant: 150),
-            blurElemetnsView.widthAnchor.constraint(equalToConstant: 170),
+            blurElemetnsView.widthAnchor.constraint(equalToConstant: 190),
+            
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.heightAnchor.constraint(equalToConstant: 120)
         ])
     }
 }
@@ -341,5 +374,30 @@ private extension ViewController {
         } else {
             tempSwitch.isOn = defaults.bool(forKey: "setSwitch")
         }
+    }
+}
+
+extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("count: ", weatherForecast.count)
+        return weatherForecast.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? CollectionViewCell else { return UICollectionViewCell() }
+        
+        
+        let weather = weatherForecast[indexPath.item]
+        cell.configure(with: weather)
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        collectionInsets
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        collectionInsets.top
     }
 }

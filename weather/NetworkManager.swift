@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
 final class NetworkManager {
+    
+    static let shared = NetworkManager()
     
     let baseURL = "https://api.openweathermap.org/data/2.5/forecast?"
     
