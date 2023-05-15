@@ -355,9 +355,11 @@ private extension ViewController {
         elementsStackView.addArrangedSubview(pressureStackView)
         pressureStackView.addArrangedSubview(pressureImageView)
         pressureStackView.addArrangedSubview(pressureLabel)
+        
         elementsStackView.addArrangedSubview(humidityStackView)
         humidityStackView.addArrangedSubview(humidityImageView)
         humidityStackView.addArrangedSubview(humidityLabel)
+        
         elementsStackView.addArrangedSubview(windStackView)
         windStackView.addArrangedSubview(windImageView)
         windStackView.addArrangedSubview(windLabel)

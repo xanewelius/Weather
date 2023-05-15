@@ -68,17 +68,14 @@
 		40401B7929A8FA8E00008F9C /* weather */ = {
 			isa = PBXGroup;
 			children = (
+				4049D6C42A115A020079F0A3 /* NetworkSetvice */,
+				4049D6C32A1159F20079F0A3 /* model */,
+				4049D6C22A1159D30079F0A3 /* view */,
 				40401B9929A98EAF00008F9C /* fonts */,
-				40401BC329AA4C3100008F9C /* IconModel.swift */,
 				40401B7A29A8FA8E00008F9C /* AppDelegate.swift */,
 				40401B7C29A8FA8E00008F9C /* SceneDelegate.swift */,
-				40401B7E29A8FA8E00008F9C /* ViewController.swift */,
-				4049D6BE2A10F51A0079F0A3 /* TodayForecastCollectionViewCell.swift */,
-				4049D6BC2A1013510079F0A3 /* WeatherForecastCollectionViewCell.swift */,
 				4049D6C02A1104680079F0A3 /* Assets.xcassets */,
 				40401B8829A8FA8F00008F9C /* Info.plist */,
-				40401B8E29A92B8900008F9C /* Model.swift */,
-				40401B9029A9754400008F9C /* NetworkManager.swift */,
 			);
 			path = weather;
 			sourceTree = "<group>";
@@ -91,6 +88,33 @@
 				40401BA129A98EAF00008F9C /* Montserrat-Bold.ttf */,
 			);
 			path = fonts;
+			sourceTree = "<group>";
+		};
+		4049D6C22A1159D30079F0A3 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				40401B7E29A8FA8E00008F9C /* ViewController.swift */,
+				4049D6BE2A10F51A0079F0A3 /* TodayForecastCollectionViewCell.swift */,
+				4049D6BC2A1013510079F0A3 /* WeatherForecastCollectionViewCell.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		4049D6C32A1159F20079F0A3 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				40401BC329AA4C3100008F9C /* IconModel.swift */,
+				40401B8E29A92B8900008F9C /* Model.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		4049D6C42A115A020079F0A3 /* NetworkSetvice */ = {
+			isa = PBXGroup;
+			children = (
+				40401B9029A9754400008F9C /* NetworkManager.swift */,
+			);
+			path = NetworkSetvice;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
